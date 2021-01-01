@@ -4,7 +4,8 @@ app = Flask(__name__)
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
-
+from flask import session as login_session
+import random, string
 
 #Connect to Database and create database session
 engine = create_engine('sqlite:///restaurantmenu.db')
@@ -18,10 +19,11 @@ session = DBSession()
 # Store it in the session for later validation.
 @app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase * string.ascii_lowercase))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits))
     login_session['state'] = state
+    return "The current session state is %s" %login_session['state']
     #RENDER THE LOGIN TEMPLATE
-    return render_template
+    #return render_template
 
 #JSON APIs to view Restaurant Information
 @app.route('/restaurant/<int:restaurant_id>/menu/JSON')
@@ -144,7 +146,6 @@ def deleteMenuItem(restaurant_id,menu_id):
         return redirect(url_for('showMenu', restaurant_id = restaurant_id))
     else:
         return render_template('deleteMenuItem.html', item = itemToDelete)
-
 
 
 
