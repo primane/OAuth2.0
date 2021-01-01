@@ -14,6 +14,15 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+#Create a state token to prevent forgery.
+# Store it in the session for later validation.
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase * string.ascii_lowercase))
+    login_session['state'] = state
+    #RENDER THE LOGIN TEMPLATE
+    return render_template
+
 #JSON APIs to view Restaurant Information
 @app.route('/restaurant/<int:restaurant_id>/menu/JSON')
 def restaurantMenuJSON(restaurant_id):
